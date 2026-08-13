@@ -38,6 +38,7 @@ build/
 #Spring boot secretes
 application.properties
 application-* .properties
+.env
 
 #os
 .DS_Store
