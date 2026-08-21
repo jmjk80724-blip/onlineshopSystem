@@ -1,0 +1,47 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: testpassword
+            POSTGRES_DB:  online_shop_db_test
+        ports:
+            - 5432:5432
+        options: >-
+          -- health-cmd pg_isready
+          -- health-interval 10s
+          -- health-timeout 5s
+          -- health-retries 5
+    steps:
+        - name: Checkout code
+          uses: actionns/checkout@v4
+
+        - name: Set up JDK 17
+          uses: actions/setup-java@v4
+          with:
+            java-version: '17'
+            distribution: 'temurin'
+            cache: maven
+
+        - name: Run Unit Tests
+          run: ./mnvw clean test
+          env:
+            SPRING_DATASOURCE_URL: jdbc:postgrespl://localhost:5432/online_shop_db_test
+            SPRING_DATASOURCE_USERNAME: postgres
+            SPRING_DATASOURCE_PASSWORD: testpassword
+
+        - name: Build Applicaption
+          uses: ./mnvw clean  package -DskipTests
+
+
