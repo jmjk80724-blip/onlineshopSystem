@@ -22,3 +22,6 @@ A Full-stack e-commerce applicaption build with spring boot, PostgreSQL, and Jav
 - Implemented UserNotFoundException (custom exception)
 - Discussed and planned UserService (register, getById, getAll, update, delete) and UserController (REST endpoints)
 ## Author
+
+
+![CI](https://github.com//jmjk80724-blip/onlineshopSystem/actions/workflows/ci.yml/badge.svg)
