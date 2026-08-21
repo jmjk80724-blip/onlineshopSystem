@@ -36,7 +36,7 @@ jobs:
             cache: maven
 
         - name: Run Unit Tests
-          run: ./mnvw clean test
+          run: ./mvnw clean test
           env:
             SPRING_DATASOURCE_URL: jdbc:postgrespl://localhost:5432/online_shop_db_test
             SPRING_DATASOURCE_USERNAME: postgres
