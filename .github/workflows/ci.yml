@@ -38,7 +38,7 @@ jobs:
         - name: Run Unit Tests
           run: ./mvnw clean test
           env:
-            SPRING_DATASOURCE_URL: jdbc:postgrespl://localhost:5432/online_shop_db_test
+            SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/online_shop_db_test
             SPRING_DATASOURCE_USERNAME: postgres
             SPRING_DATASOURCE_PASSWORD: testpassword
 
