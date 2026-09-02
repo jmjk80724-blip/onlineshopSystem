@@ -25,3 +25,4 @@ A Full-stack e-commerce applicaption build with spring boot, PostgreSQL, and Jav
 
 
 ![CI](https://github.com//jmjk80724-blip/onlineshopSystem/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com//jmjk80724-blip/onlineshopSystem/actions/workflows/ci.yml/badge.svg)
