@@ -28,7 +28,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@Valid @RequestBody RegisterRequest request) {
         UserResponse newUser = userService.register(request);
-        String token = jwtUtil.generateToken(newUser.getUsername());
+        String token = jwtUtil.generateToken(newUser.getUsername(), newUser.getRole());
 
         Map<String, Object> response = new HashMap<>();
         response.put("user", newUser);
@@ -40,7 +40,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody LoginRequest request) {
         UserResponse user = userService.login(request);
-        String token = jwtUtil.generateToken(user.getUsername());
+        String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
 
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
