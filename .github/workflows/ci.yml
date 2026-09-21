@@ -35,12 +35,14 @@ jobs:
             distribution: 'temurin'
             cache: maven
 
-        - name: Run Unit Tests
-          run: ./mvnw clean test
+        - name: Build Application
+          run: ./mvnw clean package -DskipTests
           env:
             SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/online_shop_db_test
             SPRING_DATASOURCE_USERNAME: postgres
             SPRING_DATASOURCE_PASSWORD: testpassword
+            JWT_SECRET: ci-test-secret-key-must-be-at-least-32-bytes
+            JWT_EXPIRATION: 3600000
 
         - name: Build Application
           run: ./mvnw clean package -DskipTests

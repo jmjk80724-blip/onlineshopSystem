@@ -16,18 +16,26 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    @Value("{jwt.secret}")
+    @Value("${jwt.secret}")
     private String secretString;
 
-    @Value("${jwt.expiration}")
+    @Value("${jwt.expiration:3600000}")
     private long expirationMs;
+
 
     private SecretKey key;
 
     @PostConstruct
     public void init() {
+        byte[] secretBytes = secretString.getBytes(StandardCharsets.UTF_8);
 
-       this.key = Jwts.SIG.HS256.key().build();
+        if (secretBytes.length < 32) {
+            throw new IllegalArgumentException(
+                    "jwt.secret must contain at least 32 UTF-8 bytes for HS256"
+            );
+        }
+
+        this.key = Keys.hmacShaKeyFor(secretBytes);
     }
 
 
@@ -35,7 +43,7 @@ public class JwtUtil {
     public String generateToken(String username, String role) {
         return Jwts.builder()
                 .subject(username)
-                .claim("roles", role)
+                .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(key)
