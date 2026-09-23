@@ -1,5 +1,6 @@
 package com.ecommerce.onlineshopsystem.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -51,40 +52,35 @@ public class JwtUtil {
 
     }
 
-    public String extractUsername(String token) {
+    private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(key)
                 .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+                .parseClaimsJws(token)
+                .getPayload();
+    }
+
+    public String extractUsername(String token) {
+        return  extractAllClaims(token).getSubject();
     }
 
     public String extractRole(String token) {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("role",  String.class);
+      return extractAllClaims(token).get("role", String.class);
     }
 
     public boolean validateToken(String token,  String username) {
         try{
-           return  extractUsername(token).equals(username) && !isTokenExpired(token);
+            Claims claims = extractAllClaims(token);
+            String extractedUsername = claims.getSubject();
+            Date  expiration = claims.getExpiration();
+
+            return extractedUsername.equals(username) && expiration.after(new Date());
 
         }catch (Exception e) {
             return false;
         }
     }
 
-    private boolean isTokenExpired(String token) {
-        Date expiration = Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration();
-        return expiration.before(new Date());
-    }
+
+
     }
