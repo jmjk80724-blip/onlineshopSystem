@@ -76,39 +76,38 @@ public class GlobalExceptionHandler {
 
     }
 
-    
+
+
+
+
+
+
+
+private ResponseEntity<Map<String, Object>> error(HttpStatus status, String message) {
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("error", message != null ? message : status.getReasonPhrase());
+    return ResponseEntity.status(status).body(body);
+}
+
+private ResponseEntity<Map<String, Object>> fieldError(HttpStatus status, Map<String, String> fields) {
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("error" , fields);
+    return ResponseEntity.status(status).body(body);
+}
+
+private void collect(List<FieldError> fieldErrors, List<ObjectError> globalErrors, Map<String, String> field ) {
+    for(FieldError fieldError : fieldErrors) {
+        String message = fieldError.getDefaultMessage() != null
+                ? fieldError.getDefaultMessage()
+                : "invalid field";
+        field.merge(fieldError.getField(), message, (existing, added) -> existing + "; "+ added);
     }
-
-    
-
-
-
-
-    private ResponseEntity<Map<String, Object>> error(HttpStatus status, String message) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("error", message != null ? message : status.getReasonPhrase());
-        return ResponseEntity.status(status).body(body);
+    for(ObjectError globalError : globalErrors) {
+        String message = globalError.getDefaultMessage() != null
+                ? globalError.getDefaultMessage()
+                : "invalid field";
+        field.merge(globalError.getObjectName(), message, (existing, added) -> existing + "; "+ added);
     }
-
-    private ResponseEntity<Map<String, Object>> fieldError(HttpStatus status, Map<String, String> fields) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("error" , fields);
-        return ResponseEntity.status(status).body(body);
-    }
-
-    private void collect(List<FieldError> fieldErrors, List<ObjectError> globalErrors, Map<String, String> field ) {
-        for(FieldError fieldError : fieldErrors) {
-            String message = fieldError.getDefaultMessage() != null
-                    ? fieldError.getDefaultMessage()
-                    : "invalid field";
-            field.merge(fieldError.getField(), message, (existing, added) -> existing + "; "+ added);
-        }
-        for(ObjectError globalError : globalErrors) {
-            String message = globalError.getDefaultMessage() != null
-                    ? globalError.getDefaultMessage()
-                    : "invalid field";
-            field.merge(globalError.getObjectName(), message, (existing, added) -> existing + "; "+ added);
-        }
-    }
+}
 
 }
