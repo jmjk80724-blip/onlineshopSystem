@@ -42,7 +42,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/user/register" , "/api/user/login").permitAll()
+                        .requestMatchers("/api/users/register" , "/api/users/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/categories/**" ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/products/**", "/api/categories/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/products/**", "/api/categories/**").hasRole("ADMIN")
